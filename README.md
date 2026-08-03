@@ -22,10 +22,12 @@ build log carries a misleading error. The build still exits 0.
 
 | | |
 |---|---|
-| next | `16.3.0-preview.9` |
+| next | `16.3.0-canary.106` (also reproduces on `16.3.0-preview.9`) |
 | react / react-dom | `19.2.6` |
 | bundler | Turbopack (default) |
 | config | `cacheComponents: true`, `partialPrefetching: true` |
+
+Verified 3/3 rounds on both versions, with every control clean in every round.
 
 ## Reproduce
 
