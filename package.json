@@ -1,0 +1,19 @@
+{
+  "name": "next-metadata-route-cache-warming-race",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "build": "next build",
+    "verify": "node verify.mjs"
+  },
+  "dependencies": {
+    "next": "16.3.0-preview.9",
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
+  },
+  "devDependencies": {
+    "@types/node": "24.9.2",
+    "@types/react": "19.2.6",
+    "typescript": "5.9.3"
+  }
+}
