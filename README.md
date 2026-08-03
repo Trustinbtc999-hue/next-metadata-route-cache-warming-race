@@ -37,8 +37,10 @@ npm run verify
 ```
 
 `verify.mjs` runs `next build` three times from a clean `.next` and exits 0 **only if**
-the repro route warns in every round *and* every control route stays clean. It exits 1
-otherwise, so this stays a useful regression check after a fix.
+the repro route does **not** warn in any round *and* every control route stays clean.
+It exits 1 if the repro warning appears in any round (bug still present) or any control
+is dirty, so the script acts as a standard regression test: green once the upstream fix
+lands.
 
 To see it once by hand:
 

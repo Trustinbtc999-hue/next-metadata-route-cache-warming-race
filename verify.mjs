@@ -1,10 +1,11 @@
-// Deterministic driver for this reproduction.
+// Regression test for the metadata-route cache warming race.
 //
-// Exits 0 ONLY when, in every round:
-//   * the repro route emits "Unexpected cache miss after cache warming phase"
+// Exits 0 ONLY when, across all rounds:
+//   * the repro route does NOT emit "Unexpected cache miss after cache warming phase"
 //   * every control route stays clean
 //
-// Any other outcome exits 1, so a fix upstream (or a flaky repro) is visible.
+// Exits 1 if the repro warning appears in any round or any control route is dirty,
+// confirming the bug is still present.
 
 import { execFile } from "node:child_process";
 import { rm } from "node:fs/promises";
@@ -62,17 +63,17 @@ for (let round = 1; round <= ROUNDS; round++) {
   const dirtyControls = CONTROL_ROUTES.filter((route) => hits.has(route));
 
   console.log(
-    `round ${round}: repro=${reproHit ? "REPRODUCED" : "no warning"} ` +
+    `round ${round}: repro=${reproHit ? "TRIGGERED (bug present)" : "clean"} ` +
       `controls=${dirtyControls.length === 0 ? "clean" : dirtyControls.join(",")}`,
   );
 
-  if (!reproHit || dirtyControls.length > 0) allGood = false;
+  if (reproHit || dirtyControls.length > 0) allGood = false;
 }
 
 if (allGood) {
-  console.log(`\nOK: reproduced in all ${ROUNDS} rounds with every control clean.`);
+  console.log(`\nOK: no repro warning in all ${ROUNDS} rounds with every control clean.`);
   process.exit(0);
 }
 
-console.error(`\nFAILED: the reproduction was not deterministic across ${ROUNDS} rounds.`);
+console.error(`\nFAILED: the cache-warming race was reproduced — bug is still present.`);
 process.exit(1);
